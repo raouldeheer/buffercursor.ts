@@ -1,0 +1,46 @@
+{
+  "name": "buffercursor.ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raouldeheer/buffercursor.ts.git"
+  },
+  "keywords": [],
+  "author": "Raoul de Heer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/raouldeheer/buffercursor.ts/issues"
+  },
+  "homepage": "https://github.com/raouldeheer/buffercursor.ts#readme",
+  "devDependencies": {
+    "@types/node": "^18.8.2",
+    "tsup": "^6.2.3",
+    "typescript": "^4.8.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/raouldeheer"
+  }
+}

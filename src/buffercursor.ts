@@ -2,15 +2,21 @@ import { OverflowError } from "./overflowError";
 
 export class BufferCursor {
     private pos: number;
-    public buffer: Buffer;
-    public length: number;
+    public readonly buffer: Buffer;
+    public readonly length: number;
 
     constructor(buff: Buffer) {
+        if (!(buff instanceof Buffer))
+            throw new TypeError("Argument must be an instance of Buffer");
         this.pos = 0;
         this.buffer = buff;
         this.length = buff.length;
     }
 
+    /**
+     * move moves the cursors by the amount of steps given.
+     * @param step number of steps to move
+     */
     public move(step: number): void {
         const pos = this.pos + step;
         if (pos < 0) throw new RangeError("Cannot move before start of buffer");
@@ -44,6 +50,13 @@ export class BufferCursor {
         return this.pos;
     }
 
+    /**
+     * Returns a new `BufferCursor` that references the same memory as the original, 
+     * but offset and cropped by the `current position` and `current position + length` or `end` indices.
+     * @since v1.0.0 
+     * @param length The length of the new `BufferCursor`.
+     * @returns a new `BufferCursor` that references the same memory as the original.
+     */
     public slice(length?: number): BufferCursor {
         const end = length === undefined ? this.length : this.pos + length;
 
@@ -53,6 +66,14 @@ export class BufferCursor {
         return buf;
     }
 
+    /**
+     * Decodes the `BufferCursor` to a string according to the specified character encoding in `encoding`. 
+     * `length` may be passed to decode only a subset of the `BufferCursor`.
+     * @since v1.0.0
+     * @param encoding The character encoding to use.
+     * @param length The number of bytes to decode.
+     * @returns a string according to the specified character encoding
+     */
     public toString(encoding: BufferEncoding = "utf8", length?: number): string {
         const end = length === undefined ? this.length : this.pos + length;
 
@@ -281,7 +302,7 @@ export class BufferCursor {
         this.move(8);
         return this;
     }
-    
+
     public writeDoubleLE(value: number): this {
         this.checkWrite(8);
         this.buffer.writeDoubleLE(value, this.pos);

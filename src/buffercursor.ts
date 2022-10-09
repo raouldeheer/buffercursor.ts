@@ -13,8 +13,8 @@ export class BufferCursor {
 
     public move(step: number): void {
         const pos = this.pos + step;
-        if (pos < 0) throw new RangeError("Cannot seek before start of buffer");
-        if (pos > this.length) throw new RangeError("Trying to seek beyond buffer");
+        if (pos < 0) throw new RangeError("Cannot move before start of buffer");
+        if (pos > this.length) throw new RangeError("Trying to move beyond buffer");
         this.pos = pos;
     }
 

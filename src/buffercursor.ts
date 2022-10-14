@@ -117,96 +117,126 @@ export class BufferCursor {
     }
 
     public readUInt8(): number {
+        this.checkWrite(1);
         const ret = this.buffer.readUInt8(this.pos);
         this.move(1);
         return ret;
     }
 
     public readInt8(): number {
+        this.checkWrite(1);
         const ret = this.buffer.readInt8(this.pos);
         this.move(1);
         return ret;
     }
 
     public readInt16BE(): number {
+        this.checkWrite(2);
         const ret = this.buffer.readInt16BE(this.pos);
         this.move(2);
         return ret;
     }
 
     public readInt16LE(): number {
+        this.checkWrite(2);
         const ret = this.buffer.readInt16LE(this.pos);
         this.move(2);
         return ret;
     }
 
     public readUInt16BE(): number {
+        this.checkWrite(2);
         const ret = this.buffer.readUInt16BE(this.pos);
         this.move(2);
         return ret;
     }
 
     public readUInt16LE(): number {
+        this.checkWrite(2);
         const ret = this.buffer.readUInt16LE(this.pos);
         this.move(2);
         return ret;
     }
 
     public readUInt32LE(): number {
+        this.checkWrite(4);
         const ret = this.buffer.readUInt32LE(this.pos);
         this.move(4);
         return ret;
     }
 
     public readUInt32BE(): number {
+        this.checkWrite(4);
         const ret = this.buffer.readUInt32BE(this.pos);
         this.move(4);
         return ret;
     }
 
     public readInt32LE(): number {
+        this.checkWrite(4);
         const ret = this.buffer.readInt32LE(this.pos);
         this.move(4);
         return ret;
     }
 
     public readInt32BE(): number {
+        this.checkWrite(4);
         const ret = this.buffer.readInt32BE(this.pos);
         this.move(4);
         return ret;
     }
 
     public readBigUint64LE(): bigint {
+        this.checkWrite(8);
         const ret = this.buffer.readBigUint64LE(this.pos);
         this.move(8);
         return ret;
     }
 
     public readBigUint64BE(): bigint {
+        this.checkWrite(8);
         const ret = this.buffer.readBigUint64BE(this.pos);
         this.move(8);
         return ret;
     }
 
+    public readBigInt64LE(): bigint {
+        this.checkWrite(8);
+        const ret = this.buffer.readBigInt64LE(this.pos);
+        this.move(8);
+        return ret;
+    }
+
+    public readBigInt64BE(): bigint {
+        this.checkWrite(8);
+        const ret = this.buffer.readBigInt64BE(this.pos);
+        this.move(8);
+        return ret;
+    }
+
     public readFloatBE(): number {
+        this.checkWrite(4);
         const ret = this.buffer.readFloatBE(this.pos);
         this.move(4);
         return ret;
     }
 
     public readFloatLE(): number {
+        this.checkWrite(4);
         const ret = this.buffer.readFloatLE(this.pos);
         this.move(4);
         return ret;
     }
 
     public readDoubleBE(): number {
+        this.checkWrite(8);
         const ret = this.buffer.readDoubleBE(this.pos);
         this.move(8);
         return ret;
     }
 
     public readDoubleLE(): number {
+        this.checkWrite(8);
         const ret = this.buffer.readDoubleLE(this.pos);
         this.move(8);
         return ret;
@@ -279,6 +309,34 @@ export class BufferCursor {
         this.checkWrite(4);
         this.buffer.writeInt32LE(value, this.pos);
         this.move(4);
+        return this;
+    }
+
+    public writeBigUint64LE(value: bigint): this {
+        this.checkWrite(8);
+        this.buffer.writeBigUint64LE(value, this.pos);
+        this.move(8);
+        return this;
+    }
+
+    public writeBigUint64BE(value: bigint): this {
+        this.checkWrite(8);
+        this.buffer.writeBigUint64BE(value, this.pos);
+        this.move(8);
+        return this;
+    }
+
+    public writeBigInt64LE(value: bigint): this {
+        this.checkWrite(8);
+        this.buffer.writeBigInt64LE(value, this.pos);
+        this.move(8);
+        return this;
+    }
+
+    public writeBigInt64BE(value: bigint): this {
+        this.checkWrite(8);
+        this.buffer.writeBigInt64BE(value, this.pos);
+        this.move(8);
         return this;
     }
 

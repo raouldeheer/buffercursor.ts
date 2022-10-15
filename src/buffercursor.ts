@@ -24,7 +24,7 @@ export class BufferCursor {
         this.pos = pos;
     }
 
-    private checkWrite(size: number): void {
+    private checkMove(size: number): void {
         if ((size > this.length) || (this.length - this.pos < size))
             throw new OverflowError(this.length, this.pos, size);
     }
@@ -96,7 +96,7 @@ export class BufferCursor {
 
     public fill(value: string | number | Uint8Array, length?: number): this {
         const end = length === undefined ? this.length : this.pos + length;
-        this.checkWrite(end - this.pos);
+        this.checkMove(end - this.pos);
 
         this.buffer.fill(value, this.pos, end);
         this.seek(end);
@@ -108,7 +108,7 @@ export class BufferCursor {
         if (!sourceStart) sourceStart = source instanceof BufferCursor ? source.pos : 0;
 
         const length = sourceEnd - sourceStart;
-        this.checkWrite(length);
+        this.checkMove(length);
         const buf = source instanceof BufferCursor ? source.buffer : source;
 
         buf.copy(this.buffer, this.pos, sourceStart, sourceEnd);
@@ -116,255 +116,172 @@ export class BufferCursor {
         return this;
     }
 
-    public readUInt8(): number {
-        this.checkWrite(1);
-        const ret = this.buffer.readUInt8(this.pos);
-        this.move(1);
+    private safeMove<T>(func: () => T, length: number) {
+        this.checkMove(length);
+        const ret = func();
+        this.move(length);
         return ret;
+    }
+
+    public readUInt8(): number {
+        return this.safeMove(() => this.buffer.readUInt8(this.pos), 1);
     }
 
     public readInt8(): number {
-        this.checkWrite(1);
-        const ret = this.buffer.readInt8(this.pos);
-        this.move(1);
-        return ret;
+        return this.safeMove(() => this.buffer.readInt8(this.pos), 1);
     }
 
     public readInt16BE(): number {
-        this.checkWrite(2);
-        const ret = this.buffer.readInt16BE(this.pos);
-        this.move(2);
-        return ret;
+        return this.safeMove(() => this.buffer.readInt16BE(this.pos), 2);
     }
 
     public readInt16LE(): number {
-        this.checkWrite(2);
-        const ret = this.buffer.readInt16LE(this.pos);
-        this.move(2);
-        return ret;
+        return this.safeMove(() => this.buffer.readInt16LE(this.pos), 2);
     }
 
     public readUInt16BE(): number {
-        this.checkWrite(2);
-        const ret = this.buffer.readUInt16BE(this.pos);
-        this.move(2);
-        return ret;
+        return this.safeMove(() => this.buffer.readUInt16BE(this.pos), 2);
     }
 
     public readUInt16LE(): number {
-        this.checkWrite(2);
-        const ret = this.buffer.readUInt16LE(this.pos);
-        this.move(2);
-        return ret;
+        return this.safeMove(() => this.buffer.readUInt16LE(this.pos), 2);
     }
 
     public readUInt32LE(): number {
-        this.checkWrite(4);
-        const ret = this.buffer.readUInt32LE(this.pos);
-        this.move(4);
-        return ret;
+        return this.safeMove(() => this.buffer.readUInt32LE(this.pos), 4);
     }
 
     public readUInt32BE(): number {
-        this.checkWrite(4);
-        const ret = this.buffer.readUInt32BE(this.pos);
-        this.move(4);
-        return ret;
+        return this.safeMove(() => this.buffer.readUInt32BE(this.pos), 4);
     }
 
     public readInt32LE(): number {
-        this.checkWrite(4);
-        const ret = this.buffer.readInt32LE(this.pos);
-        this.move(4);
-        return ret;
+        return this.safeMove(() => this.buffer.readInt32LE(this.pos), 4);
     }
 
     public readInt32BE(): number {
-        this.checkWrite(4);
-        const ret = this.buffer.readInt32BE(this.pos);
-        this.move(4);
-        return ret;
+        return this.safeMove(() => this.buffer.readInt32BE(this.pos), 4);
     }
 
     public readBigUint64LE(): bigint {
-        this.checkWrite(8);
-        const ret = this.buffer.readBigUint64LE(this.pos);
-        this.move(8);
-        return ret;
+        return this.safeMove(() => this.buffer.readBigUint64LE(this.pos), 8);
     }
 
     public readBigUint64BE(): bigint {
-        this.checkWrite(8);
-        const ret = this.buffer.readBigUint64BE(this.pos);
-        this.move(8);
-        return ret;
+        return this.safeMove(() => this.buffer.readBigUint64BE(this.pos), 8);
     }
 
     public readBigInt64LE(): bigint {
-        this.checkWrite(8);
-        const ret = this.buffer.readBigInt64LE(this.pos);
-        this.move(8);
-        return ret;
+        return this.safeMove(() => this.buffer.readBigInt64LE(this.pos), 8);
     }
 
     public readBigInt64BE(): bigint {
-        this.checkWrite(8);
-        const ret = this.buffer.readBigInt64BE(this.pos);
-        this.move(8);
-        return ret;
+        return this.safeMove(() => this.buffer.readBigInt64BE(this.pos), 8);
     }
 
     public readFloatBE(): number {
-        this.checkWrite(4);
-        const ret = this.buffer.readFloatBE(this.pos);
-        this.move(4);
-        return ret;
+        return this.safeMove(() => this.buffer.readFloatBE(this.pos), 4);
     }
 
     public readFloatLE(): number {
-        this.checkWrite(4);
-        const ret = this.buffer.readFloatLE(this.pos);
-        this.move(4);
-        return ret;
+        return this.safeMove(() => this.buffer.readFloatLE(this.pos), 4);
     }
 
     public readDoubleBE(): number {
-        this.checkWrite(8);
-        const ret = this.buffer.readDoubleBE(this.pos);
-        this.move(8);
-        return ret;
+        return this.safeMove(() => this.buffer.readDoubleBE(this.pos), 8);
     }
 
     public readDoubleLE(): number {
-        this.checkWrite(8);
-        const ret = this.buffer.readDoubleLE(this.pos);
-        this.move(8);
-        return ret;
+        return this.safeMove(() => this.buffer.readDoubleLE(this.pos), 8);
     }
 
     public writeUInt8(value: number): this {
-        this.checkWrite(1);
-        this.buffer.writeUInt8(value, this.pos);
-        this.move(1);
+        this.safeMove(() => this.buffer.writeUInt8(value, this.pos), 1);
         return this;
     }
 
     public writeInt8(value: number): this {
-        this.checkWrite(1);
-        this.buffer.writeInt8(value, this.pos);
-        this.move(1);
+        this.safeMove(() => this.buffer.writeInt8(value, this.pos), 1);
         return this;
     }
 
     public writeUInt16BE(value: number): this {
-        this.checkWrite(2);
-        this.buffer.writeUInt16BE(value, this.pos);
-        this.move(2);
+        this.safeMove(() => this.buffer.writeUInt16BE(value, this.pos), 2);
         return this;
     }
 
     public writeUInt16LE(value: number): this {
-        this.checkWrite(2);
-        this.buffer.writeUInt16LE(value, this.pos);
-        this.move(2);
+        this.safeMove(() => this.buffer.writeUInt16LE(value, this.pos), 2);
         return this;
     }
 
     public writeInt16BE(value: number): this {
-        this.checkWrite(2);
-        this.buffer.writeInt16BE(value, this.pos);
-        this.move(2);
+        this.safeMove(() => this.buffer.writeInt16BE(value, this.pos), 2);
         return this;
     }
 
     public writeInt16LE(value: number): this {
-        this.checkWrite(2);
-        this.buffer.writeInt16LE(value, this.pos);
-        this.move(2);
+        this.safeMove(() => this.buffer.writeInt16LE(value, this.pos), 2);
         return this;
     }
 
     public writeUInt32BE(value: number): this {
-        this.checkWrite(4);
-        this.buffer.writeUInt32BE(value, this.pos);
-        this.move(4);
+        this.safeMove(() => this.buffer.writeUInt32BE(value, this.pos), 4);
         return this;
     }
 
     public writeUInt32LE(value: number): this {
-        this.checkWrite(4);
-        this.buffer.writeUInt32LE(value, this.pos);
-        this.move(4);
+        this.safeMove(() => this.buffer.writeUInt32LE(value, this.pos), 4);
         return this;
     }
 
     public writeInt32BE(value: number): this {
-        this.checkWrite(4);
-        this.buffer.writeInt32BE(value, this.pos);
-        this.move(4);
+        this.safeMove(() => this.buffer.writeInt32BE(value, this.pos), 4);
         return this;
     }
 
     public writeInt32LE(value: number): this {
-        this.checkWrite(4);
-        this.buffer.writeInt32LE(value, this.pos);
-        this.move(4);
+        this.safeMove(() => this.buffer.writeInt32LE(value, this.pos), 4);
         return this;
     }
 
     public writeBigUint64LE(value: bigint): this {
-        this.checkWrite(8);
-        this.buffer.writeBigUint64LE(value, this.pos);
-        this.move(8);
+        this.safeMove(() => this.buffer.writeBigUint64LE(value, this.pos), 8);
         return this;
     }
 
     public writeBigUint64BE(value: bigint): this {
-        this.checkWrite(8);
-        this.buffer.writeBigUint64BE(value, this.pos);
-        this.move(8);
+        this.safeMove(() => this.buffer.writeBigUint64BE(value, this.pos), 8);
         return this;
     }
 
     public writeBigInt64LE(value: bigint): this {
-        this.checkWrite(8);
-        this.buffer.writeBigInt64LE(value, this.pos);
-        this.move(8);
+        this.safeMove(() => this.buffer.writeBigInt64LE(value, this.pos), 8);
         return this;
     }
 
     public writeBigInt64BE(value: bigint): this {
-        this.checkWrite(8);
-        this.buffer.writeBigInt64BE(value, this.pos);
-        this.move(8);
+        this.safeMove(() => this.buffer.writeBigInt64BE(value, this.pos), 8);
         return this;
     }
 
     public writeFloatBE(value: number): this {
-        this.checkWrite(4);
-        this.buffer.writeFloatBE(value, this.pos);
-        this.move(4);
+        this.safeMove(() => this.buffer.writeFloatBE(value, this.pos), 4);
         return this;
     }
 
     public writeFloatLE(value: number): this {
-        this.checkWrite(4);
-        this.buffer.writeFloatLE(value, this.pos);
-        this.move(4);
+        this.safeMove(() => this.buffer.writeFloatLE(value, this.pos), 4);
         return this;
     }
 
     public writeDoubleBE(value: number): this {
-        this.checkWrite(8);
-        this.buffer.writeDoubleBE(value, this.pos);
-        this.move(8);
+        this.safeMove(() => this.buffer.writeDoubleBE(value, this.pos), 8);
         return this;
     }
 
     public writeDoubleLE(value: number): this {
-        this.checkWrite(8);
-        this.buffer.writeDoubleLE(value, this.pos);
-        this.move(8);
+        this.safeMove(() => this.buffer.writeDoubleLE(value, this.pos), 8);
         return this;
     }
 }

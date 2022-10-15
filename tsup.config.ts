@@ -5,7 +5,6 @@ export default defineConfig((options) => {
         minify: !options.watch,
         entry: ['src/index.ts'],
         clean: true,
-        dts: true,
         format: ["esm", "cjs"],
     };
 });

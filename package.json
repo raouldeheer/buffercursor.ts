@@ -19,7 +19,7 @@
   "scripts": {
     "dev:test": "jest --watch",
     "test": "jest",
-    "build": "tsup --watch"
+    "build": "tsup && tsc"
   },
   "repository": {
     "type": "git",

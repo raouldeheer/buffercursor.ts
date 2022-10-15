@@ -20,7 +20,7 @@ console.log(bc.tell()); // Current cursor position (7)
 
 ## Methods
 
-See `dist/index.d.ts`
+See `.d.ts`
 
 For the most part `BufferCursor` and `Buffer` share the same methods, there's just a slight alteration in method signature, read and write methods don't take an offset. (BigInt support)
 

@@ -15,7 +15,8 @@ export class BufferCursor {
 
     /**
      * move moves the cursors by the amount of steps given.
-     * @param step number of steps to move
+     * @since v1.0.0
+     * @param {number} step number of steps to move
      */
     public move(step: number): void {
         const pos = this.pos + step;
@@ -29,12 +30,23 @@ export class BufferCursor {
             throw new OverflowError(this.length, this.pos, size);
     }
 
-    public getBuffer(offset = 0): Buffer {
+    /**
+     * getBuffer makes a copy of the part of the buffer before the cursor position.
+     * @since v1.0.0
+     * @returns {Buffer} the buffer with a copy of data until cursor position.
+     */
+    public getBuffer(): Buffer {
         const result = Buffer.allocUnsafe(this.pos);
-        this.buffer.copy(result, offset, 0, this.pos);
+        this.buffer.copy(result, 0, 0, this.pos);
         return result;
     }
 
+    /**
+     * seek moves the cursor to given position.
+     * @since v1.0.0
+     * @param {number} pos position to move to.
+     * @returns {this} this buffercursor.
+     */
     public seek(pos: number): this {
         if (pos < 0) throw new RangeError("Cannot seek before start of buffer");
         if (pos > this.length) throw new RangeError("Trying to seek beyond buffer");
@@ -42,10 +54,20 @@ export class BufferCursor {
         return this;
     }
 
+    /**
+     * eof checks and returns if the cursor is at the end of the buffer.
+     * @since v1.0.0
+     * @returns {boolean} true if cursor position is at the end of the buffer.
+     */
     public eof(): boolean {
         return this.pos == this.length;
     }
 
+    /**
+     * tell return the cursor position.
+     * @since v1.0.0
+     * @returns {number} cursor position.
+     */
     public tell(): number {
         return this.pos;
     }
@@ -54,8 +76,8 @@ export class BufferCursor {
      * Returns a new `BufferCursor` that references the same memory as the original, 
      * but offset and cropped by the `current position` and `current position + length` or `end` indices.
      * @since v1.0.0 
-     * @param length The length of the new `BufferCursor`.
-     * @returns a new `BufferCursor` that references the same memory as the original.
+     * @param {number | undefined} length The length of the new `BufferCursor`.
+     * @returns {BufferCursor} a new `BufferCursor` that references the same memory as the original.
      */
     public slice(length?: number): BufferCursor {
         const end = length === undefined ? this.length : this.pos + length;
@@ -70,9 +92,9 @@ export class BufferCursor {
      * Decodes the `BufferCursor` to a string according to the specified character encoding in `encoding`. 
      * `length` may be passed to decode only a subset of the `BufferCursor`.
      * @since v1.0.0
-     * @param encoding The character encoding to use.
-     * @param length The number of bytes to decode.
-     * @returns a string according to the specified character encoding
+     * @param {BufferEncoding | undefined} encoding The character encoding to use. Default "utf8".
+     * @param {number | undefined} length The number of bytes to decode.
+     * @returns {string} a string according to the specified character encoding.
      */
     public toString(encoding: BufferEncoding = "utf8", length?: number): string {
         const end = length === undefined ? this.length : this.pos + length;
@@ -82,18 +104,40 @@ export class BufferCursor {
         return ret;
     }
 
-    public write(value: string, length: number, encoding?: BufferEncoding): this {
+    /**
+     * write writes a string to the buffer of given length.
+     * @since v1.0.0
+     * @param {string} value the string to write to the buffer.
+     * @param {number | undefined} length the length of the string to be writen.
+     * @param {BufferEncoding | undefined} encoding the encoding to be used.
+     * @returns {this} this buffercursor.
+     */
+    public write(value: string, length: number = value.length, encoding?: BufferEncoding): this {
         const ret = this.buffer.write(value, this.pos, length, encoding);
         this.move(ret);
         return this;
     }
 
+    /**
+     * writeBuff writes a buffer to the buffer of given length.
+     * @since v1.0.0
+     * @param {Buffer} value the buffer to write to the buffer.
+     * @param {number | undefined} length the length of the buffer to be writen.
+     * @returns {this} this buffercursor.
+     */
     public writeBuff(value: Buffer, length: number = value.length): this {
         value.copy(this.buffer, this.pos, 0, length);
         this.move(length);
         return this;
     }
 
+    /**
+     * fill fills the buffer with the specified value. If length is not given, the entire buffer will be filled.
+     * @since v1.0.0
+     * @param {string | number | Uint8Array} value value to fill the buffer with.
+     * @param {number | undefined} length amount of space to fill.
+     * @returns {this} this buffercursor.
+     */
     public fill(value: string | number | Uint8Array, length?: number): this {
         const end = length === undefined ? this.length : this.pos + length;
         this.checkMove(end - this.pos);

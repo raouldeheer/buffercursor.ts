@@ -1,0 +1,11 @@
+repo:
+  - ./*
+  
+source:
+  - src/**/*
+    
+testing:
+  - tests/**/*
+
+github:
+  - .github/*

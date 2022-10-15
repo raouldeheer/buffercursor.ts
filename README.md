@@ -47,3 +47,6 @@ Additional methods:
 ## OverflowError
 
 The `OverflowError` is throw when trying to read or write beyond buffer.
+
+## Inspiration
+This project was heavily inspired by [node-buffercursor by tjfontaine](https://github.com/tjfontaine/node-buffercursor), but it is sadly no longer maintained. My first attempt at building this library was based on a fork of node-buffercursor. Since the project has matured, it was moved out to its own repository.

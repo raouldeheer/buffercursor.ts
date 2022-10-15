@@ -7,6 +7,8 @@ can read and write different types and the cursor's position will update with th
 ## Example
 
 ```typescript
+import { BufferCursor } from "buffercursor.ts";
+
 const bc = new BufferCursor(Buffer.alloc(10));
 bc.writeUInt16BE(123456789);
 bc.writeUInt8(123456789);
@@ -41,3 +43,7 @@ Additional methods:
 
  - `buffer` The raw buffer
  - `length` Size of the raw buffer
+
+## OverflowError
+
+The `OverflowError` is throw when trying to read or write beyond buffer.

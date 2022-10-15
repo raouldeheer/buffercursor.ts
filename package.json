@@ -1,7 +1,7 @@
 {
   "name": "buffercursor.ts",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple package that allows you to traverse a Buffer iteratively",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -25,7 +25,13 @@
     "type": "git",
     "url": "git+https://github.com/raouldeheer/buffercursor.ts.git"
   },
-  "keywords": [],
+  "keywords": [
+    "node",
+    "typescript",
+    "buffer",
+    "cursor",
+    "buffercursor"
+  ],
   "author": "Raoul de Heer",
   "license": "MIT",
   "bugs": {

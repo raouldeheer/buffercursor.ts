@@ -1,6 +1,6 @@
 {
   "name": "buffercursor.ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple package that allows you to traverse a Buffer iteratively",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

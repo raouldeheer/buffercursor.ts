@@ -48,8 +48,8 @@ describe("BufferCursor spec", () => {
     createNumberTest("UInt32BE", 4, [0x56D66D54, 0x2A539423]);
     createNumberTest("BigInt64LE", 8, [BigInt("6257308941279456596"), BigInt("3049944251414844451")]);
     createNumberTest("BigInt64BE", 8, [BigInt("6257308941279456596"), BigInt("3049944251414844451")]);
-    createNumberTest("BigUint64LE", 8, [BigInt("6257308941279456596"), BigInt("3049944251414844451")]);
-    createNumberTest("BigUint64BE", 8, [BigInt("6257308941279456596"), BigInt("3049944251414844451")]);
+    createNumberTest("BigUInt64LE", 8, [BigInt("6257308941279456596"), BigInt("3049944251414844451")]);
+    createNumberTest("BigUInt64BE", 8, [BigInt("6257308941279456596"), BigInt("3049944251414844451")]);
 
     // FLOATS
     createNumberTest("FloatLE", 4, [1301068908.3941, 1662506964.2258]);

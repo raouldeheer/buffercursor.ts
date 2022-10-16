@@ -13,6 +13,18 @@ export class BufferCursor {
         this.length = buff.length;
     }
 
+    private checkMove(size: number): void {
+        if ((size > this.length) || (this.length - this.pos < size))
+            throw new OverflowError(this.length, this.pos, size);
+    }
+
+    private safeMove<T>(func: () => T, length: number) {
+        this.checkMove(length);
+        const ret = func();
+        this.move(length);
+        return ret;
+    }
+
     /**
      * move moves the cursors by the amount of steps given.
      * @since v1.0.0
@@ -23,11 +35,6 @@ export class BufferCursor {
         if (pos < 0) throw new RangeError("Cannot move before start of buffer");
         if (pos > this.length) throw new RangeError("Trying to move beyond buffer");
         this.pos = pos;
-    }
-
-    private checkMove(size: number): void {
-        if ((size > this.length) || (this.length - this.pos < size))
-            throw new OverflowError(this.length, this.pos, size);
     }
 
     /**
@@ -147,6 +154,14 @@ export class BufferCursor {
         return this;
     }
 
+    /**
+     * copy copies data from a Buffer or BufferCursor to the current position.
+     * @since v1.0.0
+     * @param {BufferCursor | Buffer} source buffer to copy from.
+     * @param {number | undefined} sourceStart position to start from.
+     * @param {number | undefined} sourceEnd position to end.
+     * @returns {this} this buffercursor.
+     */
     public copy(source: BufferCursor | Buffer, sourceStart?: number, sourceEnd?: number): this {
         if (!sourceEnd) sourceEnd = source.length;
         if (!sourceStart) sourceStart = source instanceof BufferCursor ? source.pos : 0;
@@ -160,170 +175,361 @@ export class BufferCursor {
         return this;
     }
 
-    private safeMove<T>(func: () => T, length: number) {
-        this.checkMove(length);
-        const ret = func();
-        this.move(length);
-        return ret;
-    }
-
+    /**
+     * Reads an unsigned 8-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} an unsigned 8-bit integer.
+     */
     public readUInt8(): number {
         return this.safeMove(() => this.buffer.readUInt8(this.pos), 1);
     }
 
+    /**
+     * Reads a signed 8-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a signed 8-bit integer.
+     */
     public readInt8(): number {
         return this.safeMove(() => this.buffer.readInt8(this.pos), 1);
     }
 
+    /**
+     * Reads a signed, big-endian 16-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a signed, big-endian 16-bit integer.
+     */
     public readInt16BE(): number {
         return this.safeMove(() => this.buffer.readInt16BE(this.pos), 2);
     }
 
+    /**
+     * Reads a signed, little-endian 16-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a signed, little-endian 16-bit integer.
+     */
     public readInt16LE(): number {
         return this.safeMove(() => this.buffer.readInt16LE(this.pos), 2);
     }
 
+    /**
+     * Reads an unsigned, big-endian 16-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} an unsigned, big-endian 16-bit integer.
+     */
     public readUInt16BE(): number {
         return this.safeMove(() => this.buffer.readUInt16BE(this.pos), 2);
     }
 
+    /**
+     * Reads an unsigned, little-endian 16-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} an unsigned, little-endian 16-bit integer.
+     */
     public readUInt16LE(): number {
         return this.safeMove(() => this.buffer.readUInt16LE(this.pos), 2);
     }
 
+    /**
+     * Reads an unsigned, little-endian 32-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} an unsigned, little-endian 32-bit integer.
+     */
     public readUInt32LE(): number {
         return this.safeMove(() => this.buffer.readUInt32LE(this.pos), 4);
     }
 
+    /**
+     * Reads an unsigned, big-endian 32-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} an unsigned, big-endian 32-bit integer.
+     */
     public readUInt32BE(): number {
         return this.safeMove(() => this.buffer.readUInt32BE(this.pos), 4);
     }
 
+    /**
+     * Reads a signed, little-endian 32-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a signed, little-endian 32-bit integer.
+     */
     public readInt32LE(): number {
         return this.safeMove(() => this.buffer.readInt32LE(this.pos), 4);
     }
 
+    /**
+     * Reads a signed, big-endian 32-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a signed, big-endian 32-bit integer.
+     */
     public readInt32BE(): number {
         return this.safeMove(() => this.buffer.readInt32BE(this.pos), 4);
     }
 
-    public readBigUint64LE(): bigint {
-        return this.safeMove(() => this.buffer.readBigUint64LE(this.pos), 8);
+    /**
+     * Reads an unsigned, little-endian 64-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} an unsigned, little-endian 64-bit integer.
+     */
+    public readBigUInt64LE(): bigint {
+        return this.safeMove(() => this.buffer.readBigUInt64LE(this.pos), 8);
     }
 
-    public readBigUint64BE(): bigint {
-        return this.safeMove(() => this.buffer.readBigUint64BE(this.pos), 8);
+    /**
+     * Reads an unsigned, big-endian 64-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} an unsigned, big-endian 64-bit integer.
+     */
+    public readBigUInt64BE(): bigint {
+        return this.safeMove(() => this.buffer.readBigUInt64BE(this.pos), 8);
     }
 
+    /**
+     * Reads a signed, little-endian 64-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a signed, little-endian 64-bit integer.
+     */
     public readBigInt64LE(): bigint {
         return this.safeMove(() => this.buffer.readBigInt64LE(this.pos), 8);
     }
 
+    /**
+     * Reads a signed, big-endian 64-bit integer from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a signed, big-endian 64-bit integer.
+     */
     public readBigInt64BE(): bigint {
         return this.safeMove(() => this.buffer.readBigInt64BE(this.pos), 8);
     }
 
+    /**
+     * Reads a 32-bit, big-endian float from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a 32-bit, big-endian float.
+     */
     public readFloatBE(): number {
         return this.safeMove(() => this.buffer.readFloatBE(this.pos), 4);
     }
 
+    /**
+     * Reads a 32-bit, little-endian float from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a 32-bit, little-endian float.
+     */
     public readFloatLE(): number {
         return this.safeMove(() => this.buffer.readFloatLE(this.pos), 4);
     }
 
+    /**
+     * Reads a 64-bit, big-endian double from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a 64-bit, big-endian double.
+     */
     public readDoubleBE(): number {
         return this.safeMove(() => this.buffer.readDoubleBE(this.pos), 8);
     }
 
+    /**
+     * Reads a 64-bit, little-endian double from buffercursor.
+     * @since v1.0.0
+     * @returns {number} a 64-bit, little-endian double.
+     */
     public readDoubleLE(): number {
         return this.safeMove(() => this.buffer.readDoubleLE(this.pos), 8);
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeUInt8(value: number): this {
         this.safeMove(() => this.buffer.writeUInt8(value, this.pos), 1);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeInt8(value: number): this {
         this.safeMove(() => this.buffer.writeInt8(value, this.pos), 1);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeUInt16BE(value: number): this {
         this.safeMove(() => this.buffer.writeUInt16BE(value, this.pos), 2);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeUInt16LE(value: number): this {
         this.safeMove(() => this.buffer.writeUInt16LE(value, this.pos), 2);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeInt16BE(value: number): this {
         this.safeMove(() => this.buffer.writeInt16BE(value, this.pos), 2);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeInt16LE(value: number): this {
         this.safeMove(() => this.buffer.writeInt16LE(value, this.pos), 2);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeUInt32BE(value: number): this {
         this.safeMove(() => this.buffer.writeUInt32BE(value, this.pos), 4);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeUInt32LE(value: number): this {
         this.safeMove(() => this.buffer.writeUInt32LE(value, this.pos), 4);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeInt32BE(value: number): this {
         this.safeMove(() => this.buffer.writeInt32BE(value, this.pos), 4);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeInt32LE(value: number): this {
         this.safeMove(() => this.buffer.writeInt32LE(value, this.pos), 4);
         return this;
     }
 
-    public writeBigUint64LE(value: bigint): this {
-        this.safeMove(() => this.buffer.writeBigUint64LE(value, this.pos), 8);
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
+    public writeBigUInt64LE(value: bigint): this {
+        this.safeMove(() => this.buffer.writeBigUInt64LE(value, this.pos), 8);
         return this;
     }
 
-    public writeBigUint64BE(value: bigint): this {
-        this.safeMove(() => this.buffer.writeBigUint64BE(value, this.pos), 8);
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
+    public writeBigUInt64BE(value: bigint): this {
+        this.safeMove(() => this.buffer.writeBigUInt64BE(value, this.pos), 8);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeBigInt64LE(value: bigint): this {
         this.safeMove(() => this.buffer.writeBigInt64LE(value, this.pos), 8);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeBigInt64BE(value: bigint): this {
         this.safeMove(() => this.buffer.writeBigInt64BE(value, this.pos), 8);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeFloatBE(value: number): this {
         this.safeMove(() => this.buffer.writeFloatBE(value, this.pos), 4);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeFloatLE(value: number): this {
         this.safeMove(() => this.buffer.writeFloatLE(value, this.pos), 4);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeDoubleBE(value: number): this {
         this.safeMove(() => this.buffer.writeDoubleBE(value, this.pos), 8);
         return this;
     }
 
+    /**
+     * Writes value to buffercursor at the current position.
+     * @since v1.0.0
+     * @param value Number to be written to buffercursor.
+     * @returns {this} this buffercursor.
+     */
     public writeDoubleLE(value: number): this {
         this.safeMove(() => this.buffer.writeDoubleLE(value, this.pos), 8);
         return this;

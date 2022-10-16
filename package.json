@@ -17,6 +17,7 @@
     }
   },
   "scripts": {
+    "prepack": "npm run build",
     "dev:test": "jest --watch",
     "test": "jest",
     "build": "tsup && tsc"

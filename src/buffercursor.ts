@@ -1,10 +1,20 @@
 import { OverflowError } from "./overflowError";
 
+/**
+ * @class BufferCursor
+ * @classdesc BufferCursor provides a cursor to make using a Buffer easier.
+ * @since v1.0.0
+ */
 export class BufferCursor {
     private pos: number;
     public readonly buffer: Buffer;
     public readonly length: number;
 
+    /**
+     * @constructor
+     * @since v1.0.0
+     * @param buff buffer to use as target.
+     */
     constructor(buff: Buffer) {
         if (!(buff instanceof Buffer))
             throw new TypeError("Argument must be an instance of Buffer");
@@ -13,15 +23,28 @@ export class BufferCursor {
         this.length = buff.length;
     }
 
+    /**
+     * checkMove checks if a move is allowed.
+     * @since v1.0.0
+     * @param {number} size size of the move to check for.
+     */
     private checkMove(size: number): void {
         if ((size > this.length) || (this.length - this.pos < size))
             throw new OverflowError(this.length, this.pos, size);
     }
 
-    private safeMove<T>(func: () => T, length: number) {
-        this.checkMove(length);
+    /**
+     * safeMove runs a function safely with a move.
+     * @since v1.0.0
+     * @template T 
+     * @param {() => T} func function to run safely.
+     * @param {number} steps number of steps to move.
+     * @returns {T} return value of the function.
+     */
+    private safeMove<T>(func: () => T, steps: number): T {
+        this.checkMove(steps);
         const ret = func();
-        this.move(length);
+        this.move(steps);
         return ret;
     }
 

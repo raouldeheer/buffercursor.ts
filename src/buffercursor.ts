@@ -9,6 +9,7 @@ export class BufferCursor {
     private pos: number;
     public readonly buffer: Buffer;
     public readonly length: number;
+    __isBufferCursor__ = true;
 
     /**
      * @constructor
@@ -556,5 +557,14 @@ export class BufferCursor {
     public writeDoubleLE(value: number): this {
         this.safeMove(() => this.buffer.writeDoubleLE(value, this.pos), 8);
         return this;
+    }
+
+    /**
+     * isBufferCursor checks if target object is an instance of BufferCursor.
+     * @param target obj to check.
+     * @returns true if target is BufferCursor.
+     */
+    public static isBufferCursor(target: Object): boolean {
+        return (target && "__isBufferCursor__" in target && target["__isBufferCursor__"]) === true;
     }
 }

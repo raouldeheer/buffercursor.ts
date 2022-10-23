@@ -56,4 +56,10 @@ describe("BufferCursor spec", () => {
     createNumberTest("FloatBE", 4, [1301068908.3941, 1662506964.2258]);
     createNumberTest("DoubleLE", 8, [1301068908.3941, 1662506964.2258]);
     createNumberTest("DoubleBE", 8, [1301068908.3941, 1662506964.2258]);
+
+    test("isBufferCursor", () => {
+        const buf = new BufferCursor(Buffer.alloc(4));
+        expect(BufferCursor.isBufferCursor(buf)).toBeTruthy();
+        expect(BufferCursor.isBufferCursor({})).toBeFalsy();
+    });
 });

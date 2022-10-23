@@ -564,7 +564,7 @@ export class BufferCursor {
      * @param target obj to check.
      * @returns true if target is BufferCursor.
      */
-    public static isBufferCursor(target: Object): boolean {
+    public static isBufferCursor(target: { "__isBufferCursor__"?: boolean; }): boolean {
         return (target && "__isBufferCursor__" in target && target["__isBufferCursor__"]) === true;
     }
 }

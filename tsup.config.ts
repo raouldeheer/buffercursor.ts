@@ -1,10 +1,10 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from "tsup";
 
 export default defineConfig((options) => {
     return {
-        target: "node14",
+        target: "node16",
         minify: !options.watch,
-        entry: ['src/index.ts'],
+        entry: ["src/index.ts"],
         clean: true,
         format: ["esm", "cjs"],
     };
